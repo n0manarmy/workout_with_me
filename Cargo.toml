@@ -6,15 +6,18 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 chrono = {version = "*", features= ["serde"]}
-gdk = "0.14.3"
 gio = "0.14.8"                     # Rust bindings for the Gio library
 glib = "0.14.8"                           # Rust bindings for the GLib library
 serde = {version = "*", features = ["derive"]}
 serde_json = "*"                     # A JSON serialization file format
-gtk = "0.14.3"
+gdk4 = "0.3.1"
+log = "*"
+pretty_env_logger = "*"
 
-[features]
-gtk_3_24 = ["gtk/v3_24"] #for CI tools
+[dependencies.gtk]
+package = "gtk4"
+version = "0.3.1"
+features = ["v4_4"]
 
 [profile.dev]
 opt-level = 0

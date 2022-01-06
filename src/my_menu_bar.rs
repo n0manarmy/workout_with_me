@@ -1,9 +1,4 @@
-// #![cfg_attr(not(feature = "gtk_3_24"), allow(unused_variables, unused_mut))]
-
-use gtk::prelude::*;
-use gtk::{
-    Orientation,
-};
+use crate::prelude::*;
 
 pub struct MyMenuBar;
 
