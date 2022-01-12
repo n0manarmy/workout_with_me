@@ -1,5 +1,7 @@
 # About
-This app is intended to allow the creation of a list of workouts. Primarily this is intended to be an "office" style workout tracker. The primary scenarioes are for people working long hours behind their desks that need to get up and move in some sort of exercise. These could be planks, pushups, junmping jacks, walking laps, etc. At my work we had a continous calendar appointment but this become unwieldy and confusing for others to join or replicate. By allowing individuals to setup their own workout routines, or to launch the app and look across the local network to others workout routines, people can share and join in as a group to motivate each other.
+This app is intended to allow the creation of a list of workouts. Primarily this is intended to be an "office" style workout tracker. The primary scenarioes are for people working long hours behind their desks that need to get up and move in some sort of exercise. These could be planks, pushups, jumping jacks, walking laps, etc. 
+
+At my work we had a continous calendar appointment but this become unwieldy and confusing for others to join or replicate. By allowing individuals to setup their own workout routines, or to launch the app and look across the local network to others workout routines, people can share and join in as a group to motivate each other.
 
 There are a host of features I hope to add, whether or not I get around to them, time will tell.
 
