@@ -145,11 +145,10 @@ impl TimeObject {
 mod tests {
     
     use super::*;
-    use crate::file_utils::FileUtils;
 
     #[test]
     pub fn read_log_file_to_time_object() {
-        let times: Vec<String> = FileUtils::read_log_file_to_vec("log_file.log");
+        let times: Vec<String> = file_utils::read_log_file_to_vec("log_file.log");
         let mut time_objects: Vec<TimeObject> = Vec::new();
         dbg!("{:?}", &times);
         for t in times {
@@ -179,7 +178,7 @@ mod tests {
         times.push(t2);
 
         for t in times {
-            FileUtils::write_to_log_file(&t.to_serde_str(), "log_file.log");
+            file_utils::write_to_log_file(&t.to_serde_str(), "log_file.log");
         }
     }
 

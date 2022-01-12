@@ -1,6 +1,6 @@
 extern crate serde;
 
-mod file_utils;
+pub mod file_utils;
 pub mod time_utils;
 mod objects;
 mod ui;
@@ -13,8 +13,7 @@ mod prelude {
     // pub use crate::manual_gui_construct::*;
     pub use crate::ui::*;
     pub use crate::time_object::TimeObject;
-    pub use crate::file_utils::FileUtils;    
-    pub use crate::file_utils::*;
+    pub use crate::file_utils;
     pub use crate::message::*;
     pub use crate::time_utils;
     pub use crate::time_object::*;
@@ -55,29 +54,13 @@ fn main() {
         .build();
     
     app.connect_activate(|app| {
-        let log_file: &'static str = "log_file.json";
-        let times: Vec<TimeObject> = if FileUtils::log_file_exists(&log_file) {
-            TimeObject::build_time_object_vec(FileUtils::read_log_file_to_vec(&log_file))
+        let workouts: Vec<Workout> = if file_utils::log_file_exists(build_ui::LOG_FILE_NAME) {
+            Workout::build_vec(file_utils::read_log_file_to_vec(build_ui::LOG_FILE_NAME))
         } else {
             Vec::new()
         };
-        // dbg!(times);
-        // GuiConstruct::build(app, times, log_file);
-        ui::build_ui::build(app, times);
+        ui::build_ui::build(app, workouts);
     });
 
-    // application.connect_activate(|app| {
-    //     //init data store for times
-    //     let log_file: &'static str = "log_file.json";
-    //     let times: Vec<TimeObject> = if FileUtils::log_file_exists(&log_file) {
-    //         TimeObject::build_time_object_vec(FileUtils::read_log_file_to_vec(&log_file))
-    //     } else {
-    //         Vec::new()
-    //     };
-    //     // dbg!(times);
-    //     // GuiConstruct::build(app, times, log_file);
-    // });
-
-    // application.run(&args().collect::<Vec<_>>());
     app.run();
 }
