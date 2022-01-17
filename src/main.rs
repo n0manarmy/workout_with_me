@@ -5,18 +5,17 @@ pub mod time_utils;
 mod objects;
 mod ui;
 // mod manual_gui_construct;
-mod message;
-mod time_object;
+// mod message;
 // mod my_menu_bar;
 
 mod prelude {
     // pub use crate::manual_gui_construct::*;
     pub use crate::ui::*;
-    pub use crate::time_object::TimeObject;
+    pub use crate::objects::time_object::TimeObject;
     pub use crate::file_utils;
-    pub use crate::message::*;
+    // pub use crate::message::*;
     pub use crate::time_utils;
-    pub use crate::time_object::*;
+    pub use crate::objects::time_object::*;
     pub use crate::objects::workout::*;
     // pub use crate::cust_timer_label::*;
     // pub use crate::my_menu_bar::*;

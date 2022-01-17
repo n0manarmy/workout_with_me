@@ -10,8 +10,8 @@ use std::io::Read;
 /// file if one does not exist, it appends if the file does exist. If we are 
 /// successful, we write to the file.
 pub fn write_to_log_file(line: &str, path: &str) {
-    match std::fs::OpenOptions::new().read(true).create(true).append(true).open(path) {
-        Ok(mut s) => s.write_all([line, "\n"].concat().as_bytes()).expect("Error writing to file"), 
+    match std::fs::OpenOptions::new().read(true).create(true).write(true).open(path) {
+        Ok(mut s) => s.write_all([line].concat().as_bytes()).expect("Error writing to file"), 
         Err(why) => panic!("{}", why),
     }
 }
@@ -45,7 +45,7 @@ pub fn log_file_exists(path: &'static str) -> bool {
 
 pub fn read_log_file_to_vec(path: &'static str) -> Vec<String> {
     if log_file_exists(&path) {
-        let mut file = match File::open(&path) {
+        let file = match File::open(&path) {
             Ok(f) => f,
             Err(why) => panic!("{}", why),
         };

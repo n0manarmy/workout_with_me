@@ -54,7 +54,13 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
         ], //# people following
     );
 
-    let tree_view: TreeView = TreeView::builder().model(&tree_store).vexpand(true).build();;
+    let tree_view: TreeView = TreeView::builder()
+        .model(&tree_store)
+        .headers_clickable(true)
+        .vexpand(true)
+        .build();
+
+    let tree_model: gtk::TreeModelSort = gtk::TreeModelSort::with_model(&tree_view.model().unwrap());
 
     build_table(workouts, &tree_view, &tree_store);
 
@@ -103,6 +109,8 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
     let wed_check_button = gtk::CheckButton::new();
     let thurs_check_button = gtk::CheckButton::new();
     let fri_check_button = gtk::CheckButton::new();
+
+    let tree_model_clone = tree_model.clone();
 
     add_workout_button.connect_clicked(clone!(@weak tree_store => move |_b| {
 
@@ -179,7 +187,7 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
 
         dialog.content_area().append(&content_area_box);
 
-        dialog.connect_response(move |d, r| {
+        dialog.connect_response(clone!(@weak tree_model => move |d, r| {
             match r {
                 ResponseType::Accept => {
                     // let content_area = &d.content_area();
@@ -201,7 +209,9 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
 
                         info!("{:?}", json!(workout));
                         tree_store_helper::add_row(&workout, &tree_store);
-                        file_utils::write_to_log_file(&json!(workout).to_string(), LOG_FILE_NAME);
+                        tree_store_helper::save(&tree_model);
+                        // tree_store_helper::save(&tree_model, &tree_store);
+                        // file_utils::write_to_log_file(&json!(workout).to_string(), LOG_FILE_NAME);
                         d.destroy();
                     }
                 }
@@ -211,52 +221,46 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
                 }
                 _ => (),
             }
-        });
+        }));
 
         dialog.show();
     }));
 
     start_stop_button.connect_clicked(clone!(@weak tree_store => move |b| {
         
-        let button_label = b.label().expect("Error unwrapping button label");
+        // let button_label = b.label().expect("Error unwrapping button label");
 
-        if button_label == START_BUTTON_LABEL {
-            b.set_label(STOP_BUTTON_LABEL);
-        } else {
-            b.set_label(START_BUTTON_LABEL);
-        }
+        // if button_label == START_BUTTON_LABEL {
+        //     b.set_label(STOP_BUTTON_LABEL);
+        // } else {
+        //     b.set_label(START_BUTTON_LABEL);
 
-        let selection = tree_view.selection();
+            let selection = tree_view.selection();
 
-        if let Some((model, iter)) = selection.selected() {
-            let workout_name: String = model
-                .get(&iter, 0)
-                .get::<String>()
-                .expect("Error parsing workout name");
-            let workout_time: String = model
-                .get(&iter, 1)
-                .get::<String>()
-                .expect("Error parsing workout time");
-            let mut workouts_done: u64 = model
-                .get(&iter, 2)
-                .get::<u64>()
-                .expect("Error parsing workouts done");
-            let people_following: String = model
-                .get(&iter, 3)
-                .get::<String>()                
-                .expect("Error parsing people following");
-            // info!(
-            //     "{}, {}, {}, {}",
-            //     workout_name, workout_time, workouts_done, people_following
-            // );
+            if let Some((model, iter)) = selection.selected() {
+                let workout_name: String = model
+                    .get(&iter, 0)
+                    .get::<String>()
+                    .expect("Error parsing workout name");
+                let workout_time: String = model
+                    .get(&iter, 1)
+                    .get::<String>()
+                    .expect("Error parsing workout time");
+                let mut workouts_done: u64 = model
+                    .get(&iter, 2)
+                    .get::<u64>()
+                    .expect("Error parsing workouts done");
+                let people_following: String = model
+                    .get(&iter, 3)
+                    .get::<String>()                
+                    .expect("Error parsing people following");
 
-            if button_label == STOP_BUTTON_LABEL {
                 workouts_done += 1;
-            }
-            tree_store_helper::set_row(&iter, &tree_store, workout_name, workout_time, workouts_done, people_following);
 
-            // &tree_store.set(&iter, 2, 
-        }
+                tree_store_helper::set_row(&iter, &tree_store, workout_name, workout_time, workouts_done, people_following);
+                tree_store_helper::save(&tree_model_clone);
+            }
+        // }
     }));
 
     right_frame.append(&scrolled_window);

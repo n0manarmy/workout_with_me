@@ -1,14 +1,13 @@
 use crate::prelude::*;
 
-#[derive(Serialize, Deserialize, Debug)]
-enum WeekDays {
-    M,
-    T,
-    W,
-    Th,
-    F,
-
-}
+// #[derive(Serialize, Deserialize, Debug)]
+// enum WeekDays {
+//     M,
+//     T,
+//     W,
+//     Th,
+//     F,
+// }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Workout {
@@ -45,6 +44,28 @@ impl Workout {
                 thurs,
                 fri,
                 num_completed: 0,
+                following: Vec::new(),
+            }
+    }
+
+    pub fn from_tree_store(
+        name: String, 
+        workout_time: String, 
+        workouts_done: u64, 
+        _people_following: String) -> Self {
+
+            let p = parse_time(workout_time);
+
+            Workout {
+                name,
+                hour: p.0,
+                min: p.1,
+                mon: p.2,
+                tues: p.3,
+                wed: p.4,
+                thurs: p.5,
+                fri: p.6,
+                num_completed: workouts_done,
                 following: Vec::new(),
             }
     }
@@ -98,5 +119,43 @@ impl Workout {
 
         objects
     }
+}
 
+pub fn parse_time(time: String) -> (String, String, bool, bool, bool, bool, bool) {
+    let (hour, min) = time.split_at(2);
+    let min = min.split_at(2).0;
+    (hour.to_string(), min.to_string(), time.contains("M "), time.contains("T "),time.contains("W "),time.contains("Th "),time.contains("F "))
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+    #[test]
+    pub fn test_parse_time() {
+        let a: String = String::from("1010 M ");
+        let a_answer: (String, String, bool, bool, bool, bool, bool) = ("10".to_string(), "10".to_string(), true, false, false, false, false);
+        assert_eq!(parse_time(a), a_answer);
+
+        let b: String = String::from("2314 M T W F ");
+        let b_answer: (String, String, bool, bool, bool, bool, bool) = ("23".to_string(), "14".to_string(), true, true, true, false, true);
+        assert_eq!(parse_time(b), b_answer);
+
+        let c: String = String::from("0000 M W Th F ");
+        let c_answer: (String, String, bool, bool, bool, bool, bool) = ("00".to_string(), "00".to_string(), true, false, true, true, true);
+        assert_eq!(parse_time(c), c_answer);
+
+        let d: String = String::from("1245 M T W Th F ");
+        let d_answer: (String, String, bool, bool, bool, bool, bool) = ("12".to_string(), "45".to_string(), true, true, true, true, true);
+        assert_eq!(parse_time(d), d_answer);
+
+        let e: String = String::from("0610 M F ");
+        let e_answer: (String, String, bool, bool, bool, bool, bool) = ("06".to_string(), "10".to_string(), true, false, false, false, true);
+        assert_eq!(parse_time(e), e_answer);
+
+        let f: String = String::from("1101 M W F ");
+        let f_answer: (String, String, bool, bool, bool, bool, bool) = ("11".to_string(), "01".to_string(), true, false, true, false, true);
+        assert_eq!(parse_time(f), f_answer);
+    }
 }

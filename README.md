@@ -5,7 +5,9 @@ There are a host of features I hope to add, whether or not I get around to them,
 
 
 # Future Features
+## Current Efforts
 * Notification of timing for each workout
+## Future Efforts
 * Peer to Peer network communication of individuals workouts. 
     * Sharing of workouts
     * Subscribing to workouts

@@ -113,7 +113,7 @@ impl TimeObject {
     }
 
     pub fn to_string(&self) -> String {
-        let mut form = self.time_stamp.format(Self::TIME_FORMAT_STAMP).to_string();
+        let form = self.time_stamp.format(Self::TIME_FORMAT_STAMP).to_string();
         form + " - " + &self.time_state.to_string()
     }
 
@@ -292,7 +292,7 @@ mod tests {
         dbg!(&time_object.date);
         dbg!(&time_object.time_stamp);
         
-        &time_object.update_time_stamp();
+        time_object.update_time_stamp();
         dbg!(&time_object.time_stamp);
         dbg!(&time_object.get_current_time());
         dbg!(&time_object.get_hour_min());
@@ -301,7 +301,7 @@ mod tests {
     #[test]
     pub fn test_set_time() {
         let mut t1: TimeObject = TimeObject::new();
-        let mut t2: TimeObject = TimeObject::new();
+        // let _t2: TimeObject = TimeObject::new();
         
         let in_time: DateTime<Local> = Local.ymd(2020, 12, 8).and_hms(6, 13, 25);
         t1.set_time(TimeState::IN, in_time, in_time);

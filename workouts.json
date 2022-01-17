@@ -1,5 +1,3 @@
-{"following":[],"fri":false,"hour":"00","min":"00","mon":false,"name":"asdf","num_completed":0,"thurs":false,"tues":false,"wed":false}
-{"following":[],"fri":false,"hour":"00","min":"00","mon":false,"name":"123","num_completed":0,"thurs":false,"tues":false,"wed":false}
-{"following":[],"fri":false,"hour":"00","min":"00","mon":false,"name":"1111","num_completed":0,"thurs":false,"tues":false,"wed":false}
-{"following":[],"fri":true,"hour":"00","min":"00","mon":false,"name":"123123","num_completed":0,"thurs":false,"tues":false,"wed":true}
-{"following":[],"fri":true,"hour":"00","min":"00","mon":true,"name":"41414","num_completed":0,"thurs":false,"tues":false,"wed":true}
+{"following":[],"fri":true,"hour":"07","min":"00","mon":true,"name":"Crunches","num_completed":3,"thurs":false,"tues":false,"wed":true}
+{"following":[],"fri":true,"hour":"07","min":"00","mon":true,"name":"Crunches","num_completed":5,"thurs":false,"tues":false,"wed":true}
+{"following":[],"fri":false,"hour":"01","min":"00","mon":false,"name":"asdf","num_completed":12,"thurs":false,"tues":true,"wed":false}

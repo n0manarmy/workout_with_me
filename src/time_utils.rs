@@ -1,7 +1,5 @@
 use crate::prelude::*;
 
-
-
 const TIME_FORMAT_STAMP: &'static str = "%Y-%m-%d %H%M";
 const TIME_FORMAT_SECONDS: &'static str = "%Y-%m-%d %H:%M:%S";
 
