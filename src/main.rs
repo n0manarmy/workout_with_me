@@ -2,6 +2,7 @@ extern crate serde;
 
 pub mod file_utils;
 pub mod time_utils;
+pub mod labels;
 mod objects;
 mod ui;
 // mod manual_gui_construct;
@@ -10,6 +11,7 @@ mod ui;
 
 mod prelude {
     // pub use crate::manual_gui_construct::*;
+    pub use crate::labels::*;
     pub use crate::ui::*;
     pub use crate::objects::time_object::TimeObject;
     pub use crate::file_utils;
@@ -49,12 +51,12 @@ fn main() {
     debug!("init main");
 
     let app = Application::builder()
-        .application_id("com.workout.with.me")
+        .application_id(static_labels::APPLICATION_ID)
         .build();
     
     app.connect_activate(|app| {
-        let workouts: Vec<Workout> = if file_utils::log_file_exists(build_ui::LOG_FILE_NAME) {
-            Workout::build_vec(file_utils::read_log_file_to_vec(build_ui::LOG_FILE_NAME))
+        let workouts: Vec<Workout> = if file_utils::log_file_exists(static_labels::LOG_FILE_NAME) {
+            Workout::build_vec(file_utils::read_log_file_to_vec(static_labels::LOG_FILE_NAME))
         } else {
             Vec::new()
         };

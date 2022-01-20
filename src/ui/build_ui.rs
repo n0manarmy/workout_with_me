@@ -1,23 +1,11 @@
 use crate::prelude::*;
 
-const START_BUTTON_LABEL: &str = "Start Workout";
-const STOP_BUTTON_LABEL: &str = "Stop Workout";
-const HOURS_OPTIONS: [&str; 24] = [
-    "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15",
-    "16", "17", "18", "19", "20", "21", "22", "23",
-];
-const MINS_OPTIONS: [&str; 12] = [
-    "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55",
-];
-
-pub const LOG_FILE_NAME: &str = "workouts.json";
 pub const TABLE_COLUMN_COUNT: usize = 4;
-
 
 pub fn build(app: &Application, workouts: Vec<Workout>) {
     let window = ApplicationWindow::new(app);
 
-    window.set_title(Some("Workout with me"));
+    window.set_title(Some(static_labels::TITLE));
     window.set_vexpand(true);
     window.set_hexpand(true);
     window.set_default_height(600);
@@ -78,31 +66,30 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
         .child(&tree_view)
         .build();
 
-    let curent_time_label_text = "Current Time";
-    let current_time_label: gtk::Label = gtk::Label::new(Some(curent_time_label_text));
+    let current_time_label: gtk::Label = gtk::Label::new(Some(static_labels::CURRENT_TIME_LABEL));
     let current_time: gtk::Label = gtk::Label::new(Some(&time_utils::get_current_time()));
 
-    let start_stop_button: gtk::Button = gtk::Button::builder().label("Start Workout").build();
+    let start_stop_button: gtk::Button = gtk::Button::builder().label(static_labels::START_BUTTON_LABEL).build();
     
     // start_stop_button.set_sensitive(false);
 
-    let add_workout_button: gtk::Button = gtk::Button::builder().label("Add workout").build();
+    let add_workout_button: gtk::Button = gtk::Button::builder().label(static_labels::ADD_WORKOUT_BUTTON_LABEL).build();
 
     let window_dialog_clone = window.clone();
 
-    let name_label: gtk::Label = gtk::Label::new(Some("Workout Description"));
+    let name_label: gtk::Label = gtk::Label::new(Some(static_labels::WORKOUT_DESCRIPTION_LABEL));
     let name_entry: gtk::Entry = gtk::Entry::new();
-    let days_check_button_label = gtk::Label::new(Some("Days"));
+    let days_check_button_label = gtk::Label::new(Some(static_labels::SELECT_DAYS_LABEL));
 
-    let workout_time_label: gtk::Label = gtk::Label::new(Some("Workout Time"));
-    let workout_time_hours: gtk::DropDown = gtk::DropDown::from_strings(&HOURS_OPTIONS);
-    let workout_time_mins: gtk::DropDown = gtk::DropDown::from_strings(&MINS_OPTIONS);
+    let workout_time_label: gtk::Label = gtk::Label::new(Some(static_labels::WORKOUT_TIME_LABEL));
+    let workout_time_hours: gtk::DropDown = gtk::DropDown::from_strings(&static_labels::HOURS_OPTIONS);
+    let workout_time_mins: gtk::DropDown = gtk::DropDown::from_strings(&static_labels::MINS_OPTIONS);
 
-    let mon_check_button_label = gtk::Label::new(Some("M"));
-    let tues_check_button_label = gtk::Label::new(Some("T"));
-    let wed_check_button_label = gtk::Label::new(Some("W"));
-    let thurs_check_button_label = gtk::Label::new(Some("Th"));
-    let fri_check_button_label = gtk::Label::new(Some("F"));
+    let mon_check_button_label = gtk::Label::new(Some(static_labels::MONDAY_LABEL));
+    let tues_check_button_label = gtk::Label::new(Some(static_labels::TUES_LABEL));
+    let wed_check_button_label = gtk::Label::new(Some(static_labels::WEDS_LABEL));
+    let thurs_check_button_label = gtk::Label::new(Some(static_labels::THURS_LABEL));
+    let fri_check_button_label = gtk::Label::new(Some(static_labels::FRI_LABEL));
 
     let mon_check_button = gtk::CheckButton::new();
     let tues_check_button = gtk::CheckButton::new();
@@ -115,12 +102,12 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
     add_workout_button.connect_clicked(clone!(@weak tree_store => move |_b| {
 
         let dialog = gtk::Dialog::with_buttons(
-            Some("Add workout"),
+            Some(static_labels::ADD_WORKOUT_BUTTON_LABEL),
             Some(&window_dialog_clone),
             DialogFlags::MODAL,
             &[
-                ("Add", ResponseType::Accept),
-                ("Cancel", ResponseType::Cancel),
+                (static_labels::ADD_LABEL, ResponseType::Accept),
+                (static_labels::CANCEL_LABEL, ResponseType::Cancel),
             ],
         );
 
@@ -198,8 +185,8 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
                     if name_entry_clone.text().to_string() != "" {
                         let workout = Workout::new(
                             name_entry_clone.text().to_string(),
-                            HOURS_OPTIONS[hours as usize].to_string(),
-                            MINS_OPTIONS[mins as usize].to_string(),
+                            static_labels::HOURS_OPTIONS[hours as usize].to_string(),
+                            static_labels::MINS_OPTIONS[mins as usize].to_string(),
                             mon_check_button_clone.is_active(),
                             tues_check_button_clone.is_active(),
                             wed_check_button_clone.is_active(),

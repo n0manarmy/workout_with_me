@@ -43,7 +43,7 @@ pub fn save(model: &gtk::TreeModelSort) {
     
     let out: String = workouts.into_iter().map(|s| [json!(s).to_string(), "\n".to_string()].concat()).collect::<String>();
 
-    file_utils::write_to_log_file(&out, build_ui::LOG_FILE_NAME);
+    file_utils::write_to_log_file(&out, static_labels::LOG_FILE_NAME);
 }
 
 pub fn set_row(

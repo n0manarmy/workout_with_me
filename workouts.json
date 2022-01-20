@@ -1,3 +1,4 @@
 {"following":[],"fri":true,"hour":"07","min":"00","mon":true,"name":"Crunches","num_completed":3,"thurs":false,"tues":false,"wed":true}
 {"following":[],"fri":true,"hour":"07","min":"00","mon":true,"name":"Crunches","num_completed":5,"thurs":false,"tues":false,"wed":true}
 {"following":[],"fri":false,"hour":"01","min":"00","mon":false,"name":"asdf","num_completed":12,"thurs":false,"tues":true,"wed":false}
+{"following":[],"fri":true,"hour":"09","min":"00","mon":true,"name":"Test","num_completed":3,"thurs":true,"tues":true,"wed":true}
