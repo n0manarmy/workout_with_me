@@ -1,6 +1,52 @@
 use crate::prelude::*;
 
-// pub fn save(tree_model: &gtk::TreeModel, tree_store: &gtk::TreeStore) {
+pub fn check_times(model: &gtk::TreeModelSort) {
+    // let iter: gtk::TreeIter = model.iter_first().expect("Unable to create iter from tree_model");
+    // let path: gtk::TreePath = model.path(&iter);
+
+    let mut workouts: Vec<Workout> = Vec::new();
+
+    // ::<(&gtk::TreeModel, &gtk::TreePath, &gtk::TreeIter)>
+    let _ = &model.foreach(
+        |model: &gtk::TreeModel, _path: &gtk::TreePath, iter: &gtk::TreeIter| {
+            
+            let workout_name: String = model
+                .get(&iter, 0)
+                .get::<String>()
+                .expect("Error parsing workout name");
+            let workout_time: String = model
+                .get(&iter, 1)
+                .get::<String>()
+                .expect("Error parsing workout time");
+            let workouts_done: u64 = model
+                .get(&iter, 2)
+                .get::<u64>()
+                .expect("Error parsing workouts done");
+            let people_following: String = model
+                .get(&iter, 3)
+                .get::<String>()
+                .expect("Error parsing people following");
+
+            // info!("{:?}, {:?}, {:?}", model, path, iter);
+            // info!("{:?}, {:?}, {:?}, {:?}", workout_name, workout_time, workouts_done, people_following);
+
+            let workout = Workout::from_tree_store(workout_name, workout_time, workouts_done, people_following);
+
+            info!("{:?}", json!(workout));
+            workouts.push(workout);
+            // file_utils::write_to_log_file(&json!(workout).to_string(), build_ui::LOG_FILE_NAME);
+
+            false
+        },
+    );
+
+    for w in workouts {
+        if time_utils::within_time_warning(15, w.get_hours_mins_u32()) {
+            
+        }
+    }
+}
+
 pub fn save(model: &gtk::TreeModelSort) {
     // let iter: gtk::TreeIter = model.iter_first().expect("Unable to create iter from tree_model");
     // let path: gtk::TreePath = model.path(&iter);

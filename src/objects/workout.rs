@@ -119,6 +119,19 @@ impl Workout {
 
         objects
     }
+
+    pub fn get_hour_u32(&self) -> u32 {
+        self.hour.parse::<u32>().expect("Error parsing string time value")
+    }
+
+    pub fn get_min_u32(&self) -> u32 {
+        self.min.parse::<u32>().expect("Error parsing string time value")
+    }
+
+    pub fn get_hours_mins_u32(self) -> u32 {
+        let converge = [self.hour, self.min].concat();
+        converge.parse::<u32>().expect("Error parsing string time value")
+    }
 }
 
 pub fn parse_time(time: String) -> (String, String, bool, bool, bool, bool, bool) {

@@ -11,6 +11,18 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
     window.set_default_height(600);
     window.set_default_width(800);
 
+    let icon_theme = gtk::IconTheme::builder()
+        .display(&window.display())
+        .resource_path(vec!["includes".into()])
+        .build();
+
+    for i in icon_theme.icon_names() {
+        info!("{:?}", i);
+    }
+
+    // let default_icon = icon_theme.
+
+
     //Storage frame for all frames before adding to the window
     let completed_frame = gtk::Box::builder()
         .orientation(Orientation::Horizontal)
@@ -37,9 +49,9 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
             // String::static_type(), //start/stop
             // gtk::CellRendererToggle::static_type(), //start/stop
             // bool::static_type(),
-            u64::static_type(), //# done
-            String::static_type(),
-        ], //# people following
+            u64::static_type(), //# completed exercises
+            String::static_type(),//# people following
+        ], 
     );
 
     let tree_view: TreeView = TreeView::builder()
@@ -52,14 +64,6 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
 
     build_table(workouts, &tree_view, &tree_store);
 
-    // let time_diff_value: gtk::Label = if times.len() > 0 {
-    //     let temp = &time_utils::get_time_diff(times.last().unwrap());
-    //     dbg!(&temp);
-    //     gtk::Label::new(Some(&temp))
-    // } else {
-    //     gtk::Label::new(Some(&String::from("No time IN")))
-    // };
-
     let scrolled_window = gtk::ScrolledWindow::builder()
         .hscrollbar_policy(gtk::PolicyType::Never)
         // .child(&list_store);
@@ -70,9 +74,9 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
     let current_time: gtk::Label = gtk::Label::new(Some(&time_utils::get_current_time()));
 
     let start_stop_button: gtk::Button = gtk::Button::builder().label(static_labels::START_BUTTON_LABEL).build();
-    
-    // start_stop_button.set_sensitive(false);
 
+    let reset_button: gtk::Button = gtk::Button::builder().label(static_labels::RESET_BUTTON_LABEL).build();
+    
     let add_workout_button: gtk::Button = gtk::Button::builder().label(static_labels::ADD_WORKOUT_BUTTON_LABEL).build();
 
     let window_dialog_clone = window.clone();
@@ -98,6 +102,37 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
     let fri_check_button = gtk::CheckButton::new();
 
     let tree_model_clone = tree_model.clone();
+
+    // let window_dialog_clone_for_reset = window.clone();
+
+    reset_button.connect_clicked(clone!(@weak tree_store, @weak window => move |_b| {
+        let dialog = gtk::Dialog::with_buttons(
+            Some(static_labels::CONFIRM_RESET_TABLE),
+            Some(&window),
+            DialogFlags::MODAL,
+            &[
+                (static_labels::YES_LABEL, ResponseType::Yes),
+                (static_labels::NO_LABEL, ResponseType::No),
+            ],
+        );
+
+        dialog.connect_response(move |d, r| {
+            match r {
+                ResponseType::Yes => {
+                    // let content_area = &d.content_area();
+                    tree_store.clear();
+                    d.destroy();
+                }
+                ResponseType::No => {
+                    d.destroy();
+                }
+                _ => (),
+            }
+        });
+
+        dialog.show();
+
+    }));
 
     add_workout_button.connect_clicked(clone!(@weak tree_store => move |_b| {
 
@@ -213,14 +248,7 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
         dialog.show();
     }));
 
-    start_stop_button.connect_clicked(clone!(@weak tree_store => move |b| {
-        
-        // let button_label = b.label().expect("Error unwrapping button label");
-
-        // if button_label == START_BUTTON_LABEL {
-        //     b.set_label(STOP_BUTTON_LABEL);
-        // } else {
-        //     b.set_label(START_BUTTON_LABEL);
+    start_stop_button.connect_clicked(clone!(@weak tree_store => move |_b| {
 
             let selection = tree_view.selection();
 
@@ -256,6 +284,7 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
     left_frame.append(&current_time);
     left_frame.append(&add_workout_button);
     left_frame.append(&start_stop_button);
+    left_frame.append(&reset_button);
 
     let tick = move || {
         current_time.set_text(&time_utils::get_current_time());

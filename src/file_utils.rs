@@ -10,8 +10,8 @@ use std::io::Read;
 /// file if one does not exist, it appends if the file does exist. If we are 
 /// successful, we write to the file.
 pub fn write_to_log_file(line: &str, path: &str) {
-    match std::fs::OpenOptions::new().read(true).create(true).write(true).open(path) {
-        Ok(mut s) => s.write_all([line].concat().as_bytes()).expect("Error writing to file"), 
+    match std::fs::OpenOptions::new().read(true).truncate(true).create(true).write(true).append(false).open(path) {
+        Ok(mut f) => f.write_all([line].concat().as_bytes()).expect("Error writing to file"),
         Err(why) => panic!("{}", why),
     }
 }
