@@ -102,6 +102,7 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
     let fri_check_button = gtk::CheckButton::new();
 
     let tree_model_clone = tree_model.clone();
+    let tree_model_clone_clone = tree_model.clone();
 
     // let window_dialog_clone_for_reset = window.clone();
 
@@ -286,8 +287,10 @@ pub fn build(app: &Application, workouts: Vec<Workout>) {
     left_frame.append(&start_stop_button);
     left_frame.append(&reset_button);
 
+
     let tick = move || {
         current_time.set_text(&time_utils::get_current_time());
+        // tree_store_helper::check_times(&tree_model_clone_clone);
         glib::Continue(true)
     };
 

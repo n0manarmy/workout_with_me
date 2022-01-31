@@ -9,7 +9,6 @@ pub fn check_times(model: &gtk::TreeModelSort) {
     // ::<(&gtk::TreeModel, &gtk::TreePath, &gtk::TreeIter)>
     let _ = &model.foreach(
         |model: &gtk::TreeModel, _path: &gtk::TreePath, iter: &gtk::TreeIter| {
-            
             let workout_name: String = model
                 .get(&iter, 0)
                 .get::<String>()
@@ -30,7 +29,12 @@ pub fn check_times(model: &gtk::TreeModelSort) {
             // info!("{:?}, {:?}, {:?}", model, path, iter);
             // info!("{:?}, {:?}, {:?}, {:?}", workout_name, workout_time, workouts_done, people_following);
 
-            let workout = Workout::from_tree_store(workout_name, workout_time, workouts_done, people_following);
+            let workout = Workout::from_tree_store(
+                workout_name,
+                workout_time,
+                workouts_done,
+                people_following,
+            );
 
             info!("{:?}", json!(workout));
             workouts.push(workout);
@@ -42,7 +46,34 @@ pub fn check_times(model: &gtk::TreeModelSort) {
 
     for w in workouts {
         if time_utils::within_time_warning(15, w.get_hours_mins_u32()) {
-            
+            let dialog = gtk::Dialog::new();
+            // let dialog = gtk::Dialog::with_buttons(
+            //     Some(static_labels::CONFIRM_RESET_TABLE),
+            //     Some(&window),
+            //     DialogFlags::MODAL,
+            //     &[
+            //         (static_labels::YES_LABEL, ResponseType::Yes),
+            //         (static_labels::NO_LABEL, ResponseType::No),
+            //     ],
+            // );
+
+            // dialog.connect_response(move |d, r| {
+            //     match r {
+            //         ResponseType::Yes => {
+            //             // let content_area = &d.content_area();
+            //             // tree_store.clear();
+            //             d.destroy();
+            //         }
+            //         ResponseType::No => {
+            //             d.destroy();
+            //         }
+            //         _ => (),
+            //     }
+            // });
+
+            dialog.show();
+
+            break;
         }
     }
 }
@@ -54,40 +85,50 @@ pub fn save(model: &gtk::TreeModelSort) {
     let mut workouts: Vec<Workout> = Vec::new();
 
     // ::<(&gtk::TreeModel, &gtk::TreePath, &gtk::TreeIter)>
-    info!("{:?}", &model.foreach(
-        |model: &gtk::TreeModel, _path: &gtk::TreePath, iter: &gtk::TreeIter| {
-            
-            let workout_name: String = model
-                .get(&iter, 0)
-                .get::<String>()
-                .expect("Error parsing workout name");
-            let workout_time: String = model
-                .get(&iter, 1)
-                .get::<String>()
-                .expect("Error parsing workout time");
-            let workouts_done: u64 = model
-                .get(&iter, 2)
-                .get::<u64>()
-                .expect("Error parsing workouts done");
-            let people_following: String = model
-                .get(&iter, 3)
-                .get::<String>()
-                .expect("Error parsing people following");
+    info!(
+        "{:?}",
+        &model.foreach(
+            |model: &gtk::TreeModel, _path: &gtk::TreePath, iter: &gtk::TreeIter| {
+                let workout_name: String = model
+                    .get(&iter, 0)
+                    .get::<String>()
+                    .expect("Error parsing workout name");
+                let workout_time: String = model
+                    .get(&iter, 1)
+                    .get::<String>()
+                    .expect("Error parsing workout time");
+                let workouts_done: u64 = model
+                    .get(&iter, 2)
+                    .get::<u64>()
+                    .expect("Error parsing workouts done");
+                let people_following: String = model
+                    .get(&iter, 3)
+                    .get::<String>()
+                    .expect("Error parsing people following");
 
-            // info!("{:?}, {:?}, {:?}", model, path, iter);
-            // info!("{:?}, {:?}, {:?}, {:?}", workout_name, workout_time, workouts_done, people_following);
+                // info!("{:?}, {:?}, {:?}", model, path, iter);
+                // info!("{:?}, {:?}, {:?}, {:?}", workout_name, workout_time, workouts_done, people_following);
 
-            let workout = Workout::from_tree_store(workout_name, workout_time, workouts_done, people_following);
+                let workout = Workout::from_tree_store(
+                    workout_name,
+                    workout_time,
+                    workouts_done,
+                    people_following,
+                );
 
-            info!("{:?}", json!(workout));
-            workouts.push(workout);
-            // file_utils::write_to_log_file(&json!(workout).to_string(), build_ui::LOG_FILE_NAME);
+                info!("{:?}", json!(workout));
+                workouts.push(workout);
+                // file_utils::write_to_log_file(&json!(workout).to_string(), build_ui::LOG_FILE_NAME);
 
-            false
-        },
-    ));
-    
-    let out: String = workouts.into_iter().map(|s| [json!(s).to_string(), "\n".to_string()].concat()).collect::<String>();
+                false
+            },
+        )
+    );
+
+    let out: String = workouts
+        .into_iter()
+        .map(|s| [json!(s).to_string(), "\n".to_string()].concat())
+        .collect::<String>();
 
     file_utils::write_to_log_file(&out, static_labels::LOG_FILE_NAME);
 }
